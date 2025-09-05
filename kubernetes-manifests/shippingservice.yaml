@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: shippingservice
+        image: arun2sr/google:shippingservice
         ports:
         - containerPort: 50051
         env:
