@@ -27,30 +27,11 @@ spec:
       labels:
         app: checkoutservice
     spec:
-      serviceAccountName: checkoutservice
-      securityContext:
-        fsGroup: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        runAsUser: 1000
       containers:
         - name: server
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            readOnlyRootFilesystem: true
-          image: checkoutservice
+          image: arun2sr/google:checkoutservice
           ports:
           - containerPort: 5050
-          readinessProbe:
-            grpc:
-              port: 5050
-          livenessProbe:
-            grpc:
-              port: 5050
           env:
           - name: PORT
             value: "5050"
@@ -88,8 +69,3 @@ spec:
   - name: grpc
     port: 5050
     targetPort: 5050
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: checkoutservice

@@ -27,33 +27,11 @@ spec:
       labels:
         app: recommendationservice
     spec:
-      serviceAccountName: recommendationservice
-      terminationGracePeriodSeconds: 5
-      securityContext:
-        fsGroup: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        runAsUser: 1000
       containers:
       - name: server
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-        image: recommendationservice
+        image: arun2sr/google:recommendationservice
         ports:
         - containerPort: 8080
-        readinessProbe:
-          periodSeconds: 5
-          grpc:
-            port: 8080
-        livenessProbe:
-          periodSeconds: 5
-          grpc:
-            port: 8080
         env:
         - name: PORT
           value: "8080"
@@ -83,8 +61,3 @@ spec:
   - name: grpc
     port: 8080
     targetPort: 8080
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: recommendationservice

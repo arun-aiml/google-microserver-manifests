@@ -27,23 +27,9 @@ spec:
       labels:
         app: cartservice
     spec:
-      serviceAccountName: cartservice
-      terminationGracePeriodSeconds: 5
-      securityContext:
-        fsGroup: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        runAsUser: 1000
       containers:
       - name: server
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-        image: cartservice
+        image: arun2sr/google:cartservice
         ports:
         - containerPort: 7070
         env:
@@ -56,15 +42,6 @@ spec:
           limits:
             cpu: 300m
             memory: 128Mi
-        readinessProbe:
-          initialDelaySeconds: 15
-          grpc:
-            port: 7070
-        livenessProbe:
-          initialDelaySeconds: 15
-          periodSeconds: 10
-          grpc:
-            port: 7070
 ---
 apiVersion: v1
 kind: Service
@@ -81,11 +58,6 @@ spec:
     port: 7070
     targetPort: 7070
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: cartservice
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -101,31 +73,11 @@ spec:
       labels:
         app: redis-cart
     spec:
-      securityContext:
-        fsGroup: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        runAsUser: 1000
       containers:
       - name: redis
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
         image: redis:alpine
         ports:
         - containerPort: 6379
-        readinessProbe:
-          periodSeconds: 5
-          tcpSocket:
-            port: 6379
-        livenessProbe:
-          periodSeconds: 5
-          tcpSocket:
-            port: 6379
         volumeMounts:
         - mountPath: /data
           name: redis-data

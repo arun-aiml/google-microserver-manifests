@@ -27,23 +27,9 @@ spec:
       labels:
         app: adservice
     spec:
-      serviceAccountName: adservice
-      terminationGracePeriodSeconds: 5
-      securityContext:
-        fsGroup: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        runAsUser: 1000
       containers:
       - name: server
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-        image: adservice
+        image: arun2sr/google:adservice
         ports:
         - containerPort: 9555
         env:
@@ -56,16 +42,6 @@ spec:
           limits:
             cpu: 300m
             memory: 300Mi
-        readinessProbe:
-          initialDelaySeconds: 20
-          periodSeconds: 15
-          grpc:
-            port: 9555
-        livenessProbe:
-          initialDelaySeconds: 20
-          periodSeconds: 15
-          grpc:
-            port: 9555
 ---
 apiVersion: v1
 kind: Service
@@ -81,8 +57,3 @@ spec:
   - name: grpc
     port: 9555
     targetPort: 9555
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: adservice
